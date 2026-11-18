@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Escape Room: Chernóbil</title>
+<style>
+:root{--bg:#101820;--panel:#1b2933;--panel2:#223541;--ink:#edf3f4;--muted:#b8c7cc;--lime:#c5e86c;--orange:#ffb86b;--red:#ff7777}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#263b43 0,#101820 55%);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:20px 16px 56px}.top{border:1px solid #50636b;border-radius:22px;overflow:hidden;background:linear-gradient(120deg,#17242b,#30454a);padding:26px;position:relative}
+.kicker{letter-spacing:.18em;text-transform:uppercase;color:var(--lime);font-size:.75rem;font-weight:800}.top h1{font-size:clamp(2.2rem,8vw,4.4rem);line-height:.98;margin:12px 0}.top p{max-width:650px;color:#d2dee0}.tag{display:inline-block;border:1px solid #71858b;border-radius:30px;padding:5px 11px;margin:5px 5px 0 0;font-size:.8rem}
+.panel{background:rgba(27,41,51,.96);border:1px solid #40545d;border-radius:18px;padding:20px;margin-top:18px;box-shadow:0 12px 32px #0003}
+h2{margin:0 0 8px;font-size:1.45rem}h3{margin:14px 0 7px;color:var(--lime)}p{margin:8px 0}.muted{color:var(--muted)}.steps{display:flex;gap:7px;margin:18px 0;flex-wrap:wrap}.step{flex:1;min-width:105px;text-align:center;border:1px solid #52656d;border-radius:12px;padding:9px 5px;color:var(--muted);font-size:.83rem}.step.active{border-color:var(--lime);color:var(--lime);background:#c5e86c12}.step.done{border-color:#79c99a;color:#a9edc1}
+button{border:0;border-radius:12px;background:var(--lime);color:#152027;padding:12px 17px;font-weight:800;font-size:1rem;cursor:pointer;margin-top:12px}button.secondary{background:#334954;color:var(--ink);border:1px solid #61757c}button:disabled{opacity:.4;cursor:not-allowed}
+input,select{width:100%;background:#101a20;color:var(--ink);border:1px solid #657982;border-radius:10px;padding:12px;font:inherit;margin:5px 0 10px}
+label{display:block;font-weight:650;margin-top:12px}.q{background:#223541;border-radius:12px;padding:13px;margin:10px 0}.feedback{margin-top:12px;padding:11px;border-radius:10px;display:none}.ok{display:block;background:#183d31;color:#baf0d0;border:1px solid #39775d}.no{display:block;background:#482d2d;color:#ffd0c8;border:1px solid #8a4b4b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.tile{background:#223541;border:1px solid #425963;border-radius:12px;padding:13px}
+.keyrow{display:flex;gap:8px;justify-content:center;margin:18px 0}.digit{width:48px;height:56px;border:1px solid #6b7d83;border-radius:10px;display:grid;place-items:center;font-size:1.5rem;font-weight:800;color:var(--lime);background:#101a20}
+.hidden{display:none!important}.small{font-size:.88rem}.footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:24px}
+a{color:var(--lime)}.notice{border-left:4px solid var(--orange);padding:10px 13px;background:#392f24;border-radius:7px;color:#ffe0bd}
+
+/* Ajustes para celulares */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+body {
+  min-width: 0;
+  overflow-x: hidden;
+}
+button, input, select {
+  max-width: 100%;
+}
+button {
+  min-height: 46px;
+  touch-action: manipulation;
+}
+input, select {
+  min-height: 46px;
+  font-size: 16px; /* Evita el zoom automático en iPhone */
+}
+.panel, .top {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.keyrow {
+  width: 100%;
+  gap: clamp(4px, 2vw, 8px);
+}
+.digit {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+}
+label {
+  line-height: 1.4;
+}
+input[type="radio"] {
+  width: auto;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 0 7px 0 0;
+  vertical-align: middle;
+}
+.q label {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 0;
+}
+@media (max-width: 600px) {
+  .wrap {
+    padding: 12px 10px 32px;
+  }
+  .top {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+  .top h1 {
+    font-size: clamp(2.2rem, 13vw, 3.4rem);
+    overflow-wrap: normal;
+  }
+  .top h2 {
+    font-size: 1.2rem;
+  }
+  .panel {
+    padding: 15px 13px;
+    margin-top: 13px;
+    border-radius: 14px;
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .step {
+    min-width: 0;
+    padding: 9px 4px;
+    font-size: .78rem;
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .keyrow {
+    margin: 14px 0;
+  }
+  .digit {
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  button {
+    width: 100%;
+    padding: 13px 12px;
+  }
+  .tag {
+    font-size: .76rem;
+  }
+}
+@media (max-width: 360px) {
+  .wrap {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+  .panel {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+  .step {
+    font-size: .72rem;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div class="kicker">Archivo histórico · acceso restringido</div>
+ <h1>CHERNÓBIL</h1>
+ <h2>Una historia que todavía no terminó</h2>
+ <p>Un archivo digital sobre el accidente nuclear de 1986 quedó bloqueado. Para recuperarlo, deberán superar cinco desafíos basados en la lectura.</p>
+ <span class="tag">3.º año</span><span class="tag">Equipos de 3 o 4</span><span class="tag">40–50 minutos</span>
+</header>
+
+<section class="panel" id="intro">
+ <h2>Su misión</h2>
+ <p>Lean con atención cada consigna y resuelvan los desafíos en equipo. Cada prueba correcta les dará una cifra. Al final deberán reunir las cinco cifras para abrir el archivo.</p>
+ <div class="notice"><b>Importante:</b> pueden volver al texto todas las veces que lo necesiten. No se trata de responder rápido, sino de comprender y justificar.</div>
+ <button onclick="startGame()">Comenzar misión →</button>
+</section>
+
+<div id="game" class="hidden">
+ <div class="steps" id="steps">
+  <div class="step active">01 · Accidente</div><div class="step">02 · Conceptos</div><div class="step">03 · Limpieza</div><div class="step">04 · Sarcófago</div><div class="step">05 · Actualidad</div>
+ </div>
+
+ <section class="panel challenge" id="c1">
+  <div class="kicker">Desafío 01</div><h2>Reconstruir el accidente</h2>
+  <p class="muted">El registro está desordenado. Ordenen los hechos del relato desde la preparación de la prueba hasta las consecuencias inmediatas.</p>
+  <div class="q">
+   <label>Primer hecho</label>
+   <select id="ord1"><option value="">Elegir…</option><option value="surge">Se produjo una sobretensión inesperada.</option><option value="fire">Se incendió el grafito del reactor.</option><option value="security">Se apagaron los sistemas de seguridad.</option><option value="break">Se rompieron los elementos de combustible y ocurrió una explosión.</option><option value="plan">El equipo planificó una prueba para comprobar si las turbinas podían mantener funcionando las bombas de refrigeración.</option></select>
+   <label>Segundo hecho</label>
+   <select id="ord2"><option value="">Elegir…</option><option value="surge">Se produjo una sobretensión inesperada.</option><option value="fire">Se incendió el grafito del reactor.</option><option value="security">Se apagaron los sistemas de seguridad.</option><option value="break">Se rompieron los elementos de combustible y ocurrió una explosión.</option><option value="plan">El equipo planificó una prueba para comprobar si las turbinas podían mantener funcionando las bombas de refrigeración.</option></select>
+   <label>Tercer hecho</label>
+   <select id="ord3"><option value="">Elegir…</option><option value="surge">Se produjo una sobretensión inesperada.</option><option value="fire">Se incendió el grafito del reactor.</option><option value="security">Se apagaron los sistemas de seguridad.</option><option value="break">Se rompieron los elementos de combustible y ocurrió una explosión.</option><option value="plan">El equipo planificó una prueba para comprobar si las turbinas podían mantener funcionando las bombas de refrigeración.</option></select>
+   <label>Cuarto hecho</label>
+   <select id="ord4"><option value="">Elegir…</option><option value="surge">Se produjo una sobretensión inesperada.</option><option value="fire">Se incendió el grafito del reactor.</option><option value="security">Se apagaron los sistemas de seguridad.</option><option value="break">Se rompieron los elementos de combustible y ocurrió una explosión.</option><option value="plan">El equipo planificó una prueba para comprobar si las turbinas podían mantener funcionando las bombas de refrigeración.</option></select>
+   <label>Quinto hecho</label>
+   <select id="ord5"><option value="">Elegir…</option><option value="surge">Se produjo una sobretensión inesperada.</option><option value="fire">Se incendió el grafito del reactor.</option><option value="security">Se apagaron los sistemas de seguridad.</option><option value="break">Se rompieron los elementos de combustible y ocurrió una explosión.</option><option value="plan">El equipo planificó una prueba para comprobar si las turbinas podían mantener funcionando las bombas de refrigeración.</option></select>
+  </div>
+  <label>¿Qué número de unidad del complejo nuclear sufrió el accidente?</label><input id="a1" inputmode="numeric" placeholder="Escriban el número">
+  <button onclick="check1()">Verificar desafío</button><div id="f1" class="feedback"></div>
+ </section>
+
+ <section class="panel challenge hidden" id="c2">
+  <div class="kicker">Desafío 02</div><h2>Palabras bajo investigación</h2>
+  <p class="muted">Resuelvan las pistas con palabras que aparecen en la lectura.</p>
+  <div class="grid">
+   <div class="tile"><b>1.</b> Material que recubría el reactor y se incendió.</div>
+   <div class="tile"><b>2.</b> Líquido frío que los bomberos vertieron en el reactor durante el primer intento de extinción.</div>
+   <div class="tile"><b>3.</b> Material utilizado junto con arena para intentar sofocar el incendio.</div>
+   <div class="tile"><b>4.</b> Nombre que recibieron las personas que participaron en las tareas de limpieza.</div>
+   <div class="tile"><b>5.</b> Tipo de energía cuya liberación contaminó el ambiente.</div>
+  </div>
+  <label>Respuesta 1</label><input id="w1" placeholder="Una palabra">
+  <label>Respuesta 2</label><input id="w2" placeholder="Una palabra">
+  <label>Respuesta 3</label><input id="w3" placeholder="Una palabra">
+  <label>Respuesta 4</label><input id="w4" placeholder="Una palabra">
+  <label>Respuesta 5</label><input id="w5" placeholder="Una palabra">
+  <label>¿Durante cuántos días ardió el grafito?</label><input id="a2" inputmode="numeric" placeholder="Número de días">
+  <button onclick="check2()">Verificar desafío</button><div id="f2" class="feedback"></div>
+ </section>
+
+ <section class="panel challenge hidden" id="c3">
+  <div class="kicker">Desafío 03</div><h2>La operación de limpieza</h2>
+  <p class="muted">Relacionen cada acción con su descripción. Seleccionen la opción correcta.</p>
+  <label>Agua fría</label><select id="m1"><option value="">Elegir…</option><option value="cover">Estructura que encerró el reactor</option><option value="final">Se utilizó en la fase final</option><option value="first">Primer intento de extinción</option><option value="helicopter">Materiales arrojados desde helicópteros</option></select>
+  <label>Plomo y arena</label><select id="m2"><option value="">Elegir…</option><option value="final">Se utilizó en la fase final</option><option value="cover">Estructura que encerró el reactor</option><option value="helicopter">Materiales arrojados desde helicópteros</option><option value="first">Primer intento de extinción</option></select>
+  <label>Nitrógeno</label><select id="m3"><option value="">Elegir…</option><option value="helicopter">Materiales arrojados desde helicópteros</option><option value="first">Primer intento de extinción</option><option value="cover">Estructura que encerró el reactor</option><option value="final">Se utilizó en la fase final</option></select>
+  <label>Sarcófago</label><select id="m4"><option value="">Elegir…</option><option value="helicopter">Materiales arrojados desde helicópteros</option><option value="cover">Estructura que encerró el reactor</option><option value="first">Primer intento de extinción</option><option value="final">Se utilizó en la fase final</option></select>
+  <label>¿Qué día de mayo de 1986 se logró controlar el fuego y las emisiones radiactivas?</label><input id="a3" inputmode="numeric" placeholder="Día del mes">
+  <button onclick="check3()">Verificar desafío</button><div id="f3" class="feedback"></div>
+ </section>
+
+ <section class="panel challenge hidden" id="c4">
+  <div class="kicker">Desafío 04</div><h2>El sarcófago: ¿solución definitiva?</h2>
+  <p class="muted">Respondan a partir del apartado «¿Qué es el sarcófago?».</p>
+  <div class="q">
+   <p><b>1.</b> ¿Qué función cumplía el sarcófago?</p>
+   <label><input type="radio" name="s1" value="c" style="width:auto"> Producir energía para la central.</label>
+   <label><input type="radio" name="s1" value="a" style="width:auto"> Decorar y señalizar el edificio.</label>
+   <label><input type="radio" name="s1" value="b" style="width:auto"> Encerrar el reactor dañado y limitar la liberación de radiación.</label>
+  </div>
+  <div class="q">
+   <p><b>2.</b> ¿Qué problemas se mencionan en la lectura?</p>
+   <label><input type="radio" name="s2" value="b" style="width:auto"> Exceso de ventilación y temperaturas demasiado bajas.</label>
+   <label><input type="radio" name="s2" value="a" style="width:auto"> Falta de estabilidad, corrosión de los soportes y filtraciones de agua.</label>
+   <label><input type="radio" name="s2" value="c" style="width:auto"> Falta de electricidad para iluminarlo.</label>
+  </div>
+  <label>En noviembre de 1986, ¿qué cifra ocupa el lugar de los miles en la cantidad de toneladas de hierro utilizadas para construir el sarcófago? Escriban una sola cifra.</label><input id="a4" inputmode="numeric" maxlength="1" placeholder="Una cifra">
+  <button onclick="check4()">Verificar desafío</button><div id="f4" class="feedback"></div>
+ </section>
+
+ <section class="panel challenge hidden" id="c5">
+  <div class="kicker">Desafío 05 · Prueba final</div><h2>Chernóbil: un problema que continúa</h2>
+  <p class="muted">Lean nuevamente el último párrafo y respondan.</p>
+  <label>¿Qué ocurrió el 4 de febrero de 2025?</label>
+  <select id="last1"><option value="">Elegir…</option><option value="a">Se anunció la construcción de los reactores 5 y 6.</option><option value="b">Un ataque con drones alcanzó el resguardo antirradiación, según Ucrania.</option><option value="c">Se inauguró la central nuclear.</option></select>
+  <label>¿Qué organismo internacional informó que los niveles de radiación seguían normales y estables?</label>
+  <select id="last2"><option value="">Elegir…</option><option value="a">OIEA</option><option value="b">OMS</option><option value="c">UNESCO</option></select>
+  <label>¿En qué año ocurrió el episodio informado? Escriban la última cifra del año.</label><input id="a5" inputmode="numeric" placeholder="Última cifra del año">
+  <button onclick="check5()">Verificar desafío</button><div id="f5" class="feedback"></div>
+ </section>
+
+ <section class="panel hidden" id="final">
+  <div class="kicker">Acceso final</div><h2>Reunieron las cinco cifras</h2>
+  <p>Ingresen la clave que obtuvieron al superar los desafíos.</p>
+  <div class="keyrow"><div class="digit" id="d0">_</div><div class="digit" id="d1">_</div><div class="digit" id="d2">_</div><div class="digit" id="d3">_</div><div class="digit" id="d4">_</div></div>
+  <label>Clave de cinco cifras</label><input id="finalcode" inputmode="numeric" maxlength="5" placeholder="•••••">
+  <button onclick="unlock()">Desbloquear archivo</button><div id="ff" class="feedback"></div>
+ </section>
+
+ <section class="panel hidden" id="reflection">
+  <div class="kicker">Archivo recuperado</div><h2>¡Misión cumplida!</h2>
+  <p>Lograron reconstruir los principales acontecimientos de Chernóbil. Sin embargo, la historia no terminó cuando se controló el incendio.</p>
+  <h3>Última misión: pensar más allá del accidente</h3>
+  <p>Conversen en equipo y preparen una respuesta breve para compartir con el curso:</p>
+  <ol>
+   <li>¿Un accidente tecnológico termina cuando se controla la emergencia? Justifiquen.</li>
+   <li>¿Qué responsabilidades tienen los gobiernos y las instituciones científicas frente a los riesgos de la energía nuclear?</li>
+   <li>¿Por qué es importante que la sociedad tenga acceso a información confiable sobre estos acontecimientos?</li>
+  </ol>
+  <div class="notice">Para cerrar, cada equipo comparte una conclusión y menciona qué información de la lectura utilizó para construirla.</div>
+  <button class="secondary" onclick="location.reload()">Volver a jugar</button>
+ </section>
+</div>
+<div class="footer">Actividad educativa basada en el texto de lectura proporcionado por el docente.</div>
+</div>
+<script>
+const answers=[];
+let current=1;
+function startGame(){document.getElementById('intro').classList.add('hidden');document.getElementById('game').classList.remove('hidden');}
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function showFeedback(id,good,msg){let el=document.getElementById(id);el.className='feedback '+(good?'ok':'no');el.textContent=msg;}
+function lockVerifiedButton(button){if(button){button.disabled=true;button.textContent='Desafío superado';}}
+function advance(n,digit){answers[n-1]=digit;document.getElementById('c'+n).classList.add('hidden');if(n<5){document.getElementById('c'+(n+1)).classList.remove('hidden');current=n+1;}else{document.getElementById('final').classList.remove('hidden');}document.querySelectorAll('.step').forEach((e,i)=>{e.classList.toggle('done',i<n);e.classList.toggle('active',i===n);});answers.forEach((v,i)=>{let d=document.getElementById('d'+i);if(d)d.textContent=v;});}
+function check1(){let seq=['plan','security','surge','break','fire'];let got=[1,2,3,4,5].map(i=>document.getElementById('ord'+i).value);let valid=got.every((v,i)=>v===seq[i])&&new Set(got).size===5&&document.getElementById('a1').value.trim()==='4';if(valid){lockVerifiedButton(document.querySelector('#c1 button'));showFeedback('f1',true,'¡Correcto! El equipo planificó la prueba, se apagaron los sistemas de seguridad, se produjo la sobretensión, se rompieron los elementos de combustible y se incendió el grafito. La unidad afectada fue la 4. Primera cifra: 4.');setTimeout(()=>advance(1,'4'),900)}else showFeedback('f1',false,'Todavía no. Revisen la secuencia del relato y el número de unidad.');}
+function check2(){let vals=[1,2,3,4,5].map(i=>norm(document.getElementById('w'+i).value));let ok=[['grafito'],['agua'],['plomo'],['liquidadores','liquidador'],['radiacion']].every((a,i)=>a.includes(vals[i]))&&document.getElementById('a2').value.trim()==='9';if(ok){lockVerifiedButton(document.querySelector('#c2 button'));showFeedback('f2',true,'¡Muy bien! El grafito ardió durante 9 días. Segunda cifra: 9.');setTimeout(()=>advance(2,'9'),900)}else showFeedback('f2',false,'Revisen las cinco pistas y recuerden que la última respuesta es un número de días.');}
+function check3(){let ok=document.getElementById('m1').value==='first'&&document.getElementById('m2').value==='helicopter'&&document.getElementById('m3').value==='final'&&document.getElementById('m4').value==='cover'&&document.getElementById('a3').value.trim()==='6';if(ok){lockVerifiedButton(document.querySelector('#c3 button'));showFeedback('f3',true,'¡Correcto! El control se logró el 6 de mayo. Tercera cifra: 6.');setTimeout(()=>advance(3,'6'),900)}else showFeedback('f3',false,'Hay relaciones para revisar. Vuelvan al apartado «La limpieza».');}
+function radio(name){let e=document.querySelector('input[name="'+name+'"]:checked');return e?e.value:''}
+function check4(){let ok=radio('s1')==='b'&&radio('s2')==='a'&&document.getElementById('a4').value.trim()==='7';if(ok){lockVerifiedButton(document.querySelector('#c4 button'));showFeedback('f4',true,'¡Correcto! Se utilizaron más de 7.000 toneladas de hierro. La cifra de los miles es 7. Cuarta cifra: 7.');setTimeout(()=>advance(4,'7'),900)}else showFeedback('f4',false,'Revisen la función del sarcófago, los problemas mencionados en la lectura y la cifra de los miles en 7.000.');}
+function check5(){let ok=document.getElementById('last1').value==='b'&&document.getElementById('last2').value==='a'&&document.getElementById('a5').value.trim()==='5';if(ok){lockVerifiedButton(document.querySelector('#c5 button'));showFeedback('f5',true,'¡Correcto! El episodio informado ocurrió en 2025. Última cifra: 5.');setTimeout(()=>advance(5,'5'),900)}else showFeedback('f5',false,'Vuelvan al último párrafo y distingan lo informado por Ucrania de la declaración del organismo internacional.');}
+function unlock(){let v=document.getElementById('finalcode').value.trim();if(v==='49675'){document.querySelector('#final button').disabled=true;showFeedback('ff',true,'¡ARCHIVO DESBLOQUEADO!');document.getElementById('reflection').classList.remove('hidden');document.getElementById('reflection').scrollIntoView({behavior:'smooth'});}else showFeedback('ff',false,'La clave no coincide. Comprueben las cinco cifras obtenidas.');}
+</script>
+</body></html>
